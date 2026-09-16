@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173e43"><meta name="robots" content="noindex,nofollow">
+  <title>訓練單位地圖</title>
+  <link rel="stylesheet" href="./vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./gate.js"></script>
+</head>
+<body class="locked">
+  <header class="masthead">
+    <a class="brand" href="./" aria-label="訓練單位地圖首頁"><span class="brand-icon" aria-hidden="true">⌖</span><span>訓練單位地圖<small>教育訓練機構查詢</small></span></a>
+    <div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="search" type="search" aria-label="關鍵字搜尋" placeholder="搜尋機構、總會、地址、帳號或聯絡資料…" autocomplete="off"><kbd>/</kbd></div>
+    <div class="header-actions"><button id="source-button" class="quiet light">資料說明</button><button id="static-logout" class="quiet light">登出</button></div>
+  </header>
+  <section class="summary" aria-label="查詢摘要">
+    <div><span class="eyebrow">目前範圍</span><strong id="scope">全臺訓練機構</strong></div>
+    <div class="metric"><b id="unit-count">—</b><span>職訓機構</span></div><div class="metric"><b id="hq-count">—</b><span>總會</span></div><div class="metric"><b id="city-count">—</b><span>縣市</span></div>
+    <span class="source-label" id="version">讀取資料中</span>
+    <div class="view-switch" role="group" aria-label="檢視方式"><button id="map-view" aria-pressed="true">地圖</button><button id="table-view" aria-pressed="false">表格</button></div>
+  </section>
+  <main class="workspace">
+    <aside id="sidebar" class="sidebar" aria-label="單位列表與篩選">
+      <div class="list-heading"><h1>單位列表 <span id="result-count">0</span></h1><button id="export" class="text-button">匯出結果 ↓</button></div>
+      <div id="active-filters" class="active-filters" aria-label="目前篩選條件"></div>
+      <div id="unit-list" class="unit-list" aria-live="polite"><p class="empty">正在讀取單位資料…</p></div>
+      <section id="filters" class="filters" aria-label="篩選條件">
+        <div class="filter-heading"><h2>篩選條件</h2><button id="clear" class="text-button">清除全部</button><button id="close-filters" class="mobile-only quiet" aria-label="關閉篩選">✕</button></div>
+        <div id="filter-grid" class="filter-grid"></div>
+        <button id="apply-filters" class="primary mobile-only">套用篩選</button>
+      </section>
+    </aside>
+    <section class="map-panel" id="map-panel" aria-label="訓練單位地圖">
+      <div id="map"></div>
+      <div class="map-top"><div class="map-mode"><label for="map-mode">地圖顯示</label><select id="map-mode"><option value="unit">機構位置</option><option value="city">縣市分布</option></select></div><button id="fit" class="map-button">⌖ 回到全臺</button></div>
+      <div id="map-notice" class="map-notice" role="status">正在載入底圖…</div>
+      <div class="legend"><span class="legend-dot"></span><span id="legend-text">圓點數字為各縣市機構數；不是機構地址</span></div>
+      <div class="map-credit">座標資料 © OpenStreetMap contributors</div>
+    </section>
+    <section id="table-panel" class="table-panel" hidden aria-label="機構資料表"><div class="table-caption"><h2>機構資料總覽</h2><p>點選名稱查看完整資料；匯出結果包含目前符合條件的機構。</p></div><div class="table-scroll"><table><thead><tr><th>職訓機構</th><th>縣市</th><th>總會</th><th>主管機關</th><th>管理評鑑</th><th>技術評鑑</th><th>電話</th><th>地址</th></tr></thead><tbody id="table-body"></tbody></table></div></section>
+    <aside id="detail" class="detail" hidden aria-label="單位詳細資料"><div class="detail-header"><span>機構詳細資料</span><button id="close-detail" class="quiet" aria-label="關閉詳細資料">✕</button></div><div id="detail-content" class="detail-content"></div></aside>
+  </main>
+  <nav class="mobile-nav" aria-label="手機檢視切換"><button id="mobile-map" aria-pressed="true">⌖ 地圖</button><button id="mobile-list" aria-pressed="false">☷ 列表 <span id="mobile-count"></span></button><button id="mobile-filter">☷ 篩選</button></nav>
+  <dialog id="source-dialog"><div class="dialog-heading"><h2>資料說明</h2><button id="close-source" class="quiet" aria-label="關閉資料說明">✕</button></div><div id="source-content"></div></dialog>
+  <div id="toast" role="status" hidden></div>
+<section id="password-gate" aria-label="網站密碼"><form id="password-form"><h1>訓練單位地圖</h1><p>請輸入密碼，解鎖訓練單位資料。</p><label for="site-password">密碼</label><input id="site-password" type="password" autocomplete="current-password" required><button type="submit">解鎖地圖</button><p id="password-error" role="alert"></p></form></section></body>
+</html>
