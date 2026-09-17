@@ -14,9 +14,11 @@ function syncFilters(){
  document.querySelectorAll('[data-filter]').forEach(el=>el.checked=(filterValues[el.dataset.filter]||[]).includes(el.value));
  document.querySelectorAll('[data-summary]').forEach(el=>{const v=filterValues[el.dataset.summary]||[];el.textContent=v.length?'已選 '+v.length+' 項':'全部';});
 }
+const geographicOrder=['基隆市','臺北市','新北市','桃園市','新竹市','新竹縣','苗栗縣','臺中市','彰化縣','南投縣','雲林縣','嘉義市','嘉義縣','臺南市','高雄市','屏東縣','宜蘭縣','花蓮縣','臺東縣','澎湖縣','金門縣','連江縣'];
+function geographicRank(value){const i=geographicOrder.findIndex(city=>normalize(value).startsWith(normalize(city)));return i<0?geographicOrder.length:i;}
 function options(){
  $('#filter-grid').innerHTML=definitions.map(([key,label])=>{
- const values=[...new Set(data.units.map(u=>u[key]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant'));
+ const values=[...new Set(data.units.map(u=>u[key]).filter(Boolean))].sort((a,b)=>(['city','authority'].includes(key)?geographicRank(a)-geographicRank(b):0)||a.localeCompare(b,'zh-Hant'));
  return '<details class="multi-filter"><summary>'+esc(label)+'<span data-summary="'+key+'">全部</span></summary><div class="multi-options">'+values.map(v=>'<label><input type="checkbox" data-filter="'+key+'" value="'+esc(v)+'"><span>'+esc(filterLabel(key,v))+'</span></label>').join('')+'</div></details>';
  }).join('');
  document.querySelectorAll('[data-filter]').forEach(el=>el.onchange=()=>{const v=new Set(filterValues[el.dataset.filter]||[]);el.checked?v.add(el.value):v.delete(el.value);filterValues[el.dataset.filter]=[...v];syncFilters();render();});
@@ -79,15 +81,16 @@ function renderMap(){
   el.textContent=list.length>1?list.length:'●';
   el.setAttribute('aria-label',cityMode?group.city+' '+list.length+' 家':list.length>1?list.length+' 家機構，點選展開':list[0].name);
   el.title=cityMode?group.city:list.length===1?list[0].name:list.length+' 家機構';
-  el.onclick=()=>{
+  el.onclick=e=>{
+   e.stopPropagation();
    if(!cityMode&&list.length===1){showDetail(list[0].id);return;}
    const coords=list.map(u=>u.geo?.coordinates).filter(Boolean);
    const same=coords.length&&coords.every(c=>Math.abs(c[0]-coords[0][0])<0.00001&&Math.abs(c[1]-coords[0][1])<0.00001);
    if(!cityMode&&!same&&map.getZoom()<18){map.easeTo({center:group.coord,zoom:Math.min(map.getZoom()+2,19),duration:400});return;}
-   const node=document.createElement('div');
+   const node=document.createElement('div');node.className='location-choices';node.style.cssText='max-height:45vh;overflow-y:auto;overscroll-behavior:contain';
    const title=document.createElement('h3');title.textContent=cityMode?group.city+' · '+list.length+' 家':'此位置的機構';node.append(title);
-   for(const u of list){const b=document.createElement('button');b.textContent=u.name;b.onclick=()=>showDetail(u.id);node.append(b);}
-   popup?.remove();popup=new maplibregl.Popup({offset:22,maxWidth:'310px'}).setLngLat(group.coord).setDOMContent(node).addTo(map);
+   for(const u of list){const b=document.createElement('button');b.textContent=u.name;b.dataset.locationUnit=u.id;b.style.cssText='display:block;width:100%;min-height:44px;margin:6px 0;text-align:left;white-space:normal';b.onclick=e=>{e.stopPropagation();showDetail(u.id);};node.append(b);}
+   popup?.remove();popup=new maplibregl.Popup({offset:22,maxWidth:'310px',closeOnClick:false}).setLngLat(group.coord).setDOMContent(node).addTo(map);
   };
   markers.push(new maplibregl.Marker({element:el}).setLngLat(group.coord).addTo(map));
  }

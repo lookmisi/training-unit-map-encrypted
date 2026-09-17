@@ -6,7 +6,7 @@
   <title>訓練單位地圖</title>
   <link rel="stylesheet" href="./vendor/maplibre-gl.css">
   <link rel="stylesheet" href="./styles.css">
-  <script defer src="./gate.js"></script>
+  <script defer src="./gate.js?v=20260917"></script>
 </head>
 <body class="locked">
   <header class="masthead">
@@ -44,5 +44,5 @@
   <nav class="mobile-nav" aria-label="手機檢視切換"><button id="mobile-map" aria-pressed="true">⌖ 地圖</button><button id="mobile-list" aria-pressed="false">☷ 列表 <span id="mobile-count"></span></button><button id="mobile-filter">☷ 篩選</button></nav>
   <dialog id="source-dialog"><div class="dialog-heading"><h2>資料說明</h2><button id="close-source" class="quiet" aria-label="關閉資料說明">✕</button></div><div id="source-content"></div></dialog>
   <div id="toast" role="status" hidden></div>
-<section id="password-gate" aria-label="網站密碼"><form id="password-form"><h1>訓練單位地圖</h1><p>請輸入密碼，解鎖訓練單位資料。</p><label for="site-password">密碼</label><input id="site-password" type="password" autocomplete="current-password" required><button type="submit">解鎖地圖</button><p id="password-error" role="alert"></p></form></section></body>
+<section id="password-gate" aria-label="網站密碼"><form id="password-form"><h1>訓練單位地圖</h1><p>請輸入密碼，解鎖訓練單位資料。密碼不分大小寫。</p><label for="site-password">密碼</label><input id="site-password" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="current-password" required><button type="submit">解鎖地圖</button><p id="password-error" role="alert"></p></form></section></body>
 </html>
